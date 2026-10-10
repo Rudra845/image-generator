@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamCanvas AI - Free Online Text to Image Generator</title>
+  <meta name="description" content="Generate stunning AI pictures from text prompts for free. Choose picture styles, aspect ratios, and generate multiple pictures instantly with no login." />
+  <!-- Fonts and external assets -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://image.pollinations.ai" crossorigin />
+  <link rel="dns-prefetch" href="https://image.pollinations.ai" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <span class="brand-name">Dream<span>Canvas</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#generator" class="nav-link active">Generator</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How it Works</a>
+        <a href="#showcase" class="nav-link">Showcase</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="geminiKeyBtn" class="btn btn-outline gemini-btn" title="Configure Google Gemini API Key">
+          <i class="fa-brands fa-google"></i>
+          <span id="geminiKeyStatusText">Gemini API</span>
+        </button>
+        <button id="historyBtn" class="btn btn-outline" title="Generation History">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>History (<span id="historyCount">0</span>)</span>
+        </button>
+        <a href="#generator" class="btn btn-primary nav-cta">Create Now</a>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-badge">
+        <i class="fa-solid fa-sparkles"></i> 100% Free &bull; No Sign-Up Needed
+      </div>
+      <h1 class="hero-title">
+        Turn Your Words into <span class="gradient-text">Stunning AI Art</span>
+      </h1>
+      <p class="hero-subtitle">
+        Create high-resolution photorealistic images, 3D renders, anime visuals, and digital paintings in seconds. Simply type your prompt, pick your style, and generate.
+      </p>
+      <div class="hero-cta-group">
+        <a href="#generator" class="btn btn-primary btn-lg">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Start Creating Free
+        </a>
+        <a href="#showcase" class="btn btn-outline btn-lg">
+          <i class="fa-solid fa-images"></i> Explore Gallery
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <strong>100% Free</strong>
+          <span>No subscription</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <strong>12+ Styles</strong>
+          <span>Photo, Anime, 3D & more</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <strong>Instant HD</strong>
+          <span>One-click download</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Generator Section -->
+  <section class="generator-section" id="generator">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">AI Image Studio</h2>
+        <p class="section-desc">Customize your prompt, choose your favorite art style, aspect ratio, and number of pictures.</p>
+      </div>
+
+      <div class="generator-grid">
+        <!-- Controls Panel -->
+        <div class="generator-card controls-card">
+          <!-- 1. Prompt Input -->
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="promptInput" class="form-label">
+                <i class="fa-solid fa-pen-nib"></i> 1. Enter Your Prompt
+              </label>
+              <div class="prompt-actions">
+                <button type="button" id="enhanceGeminiBtn" class="pill-action-btn gemini-polish-btn" title="Enhance prompt with Google Gemini">
+                  <i class="fa-brands fa-google"></i> Gemini Polish
+                </button>
+                <button type="button" id="surpriseMeBtn" class="pill-action-btn" title="Get a random prompt idea">
+                  <i class="fa-solid fa-dice"></i> Surprise Me
+                </button>
+                <button type="button" id="clearPromptBtn" class="pill-action-btn" title="Clear text">
+                  <i class="fa-solid fa-trash-can"></i> Clear
+                </button>
+              </div>
+            </div>
+            <div class="textarea-container">
+              <textarea
+                id="promptInput"
+                placeholder="Describe what you want to see... (e.g., A majestic golden dragon flying over a crystalline mountain at sunset, cinematic lighting, 8k resolution)"
+                rows="4"
+              ></textarea>
+              <div class="char-counter"><span id="charCount">0</span> / 1000</div>
+            </div>
+
+            <!-- Quick sample ideas -->
+            <div class="sample-chips">
+              <span class="chips-label">Try:</span>
+              <button type="button" class="chip-item">Cyberpunk samurai in neon rain</button>
+              <button type="button" class="chip-item">Cute baby panda drinking boba tea, 3d pixar</button>
+              <button type="button" class="chip-item">Underwater ancient lost city with glowing whales</button>
+            </div>
+          </div>
+
+          <!-- Negative Prompt Accordion -->
+          <div class="form-group negative-prompt-wrapper">
+            <button type="button" id="negativePromptToggle" class="accordion-toggle">
+              <i class="fa-solid fa-chevron-right" id="negativeChevron"></i>
+              <span>Negative Prompt (What to exclude)</span>
+            </button>
+            <div id="negativePromptContainer" class="accordion-content hidden">
+              <input
+                type="text"
+                id="negativePromptInput"
+                class="text-input"
+                placeholder="blurry, distorted anatomy, low quality, deformed hands, watermark..."
+              />
+            </div>
+          </div>
+
+          <!-- Gemini AI Model Selection -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fa-brands fa-google"></i> Google AI Image Engine
+            </label>
+            <div class="gemini-model-picker">
+              <select id="geminiModelSelect" class="gemini-select">
+                <option value="imagen-3.0-generate-002" selected>✨ Google Gemini Imagen 3 (Ultra High Fidelity)</option>
+                <option value="imagen-turbo">⚡ Google Gemini Turbo (Instant Realtime)</option>
+                <option value="imagen-anime">🌸 Google Gemini Anime & Digital Illustration</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 2. Picture Type / Style Selection -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fa-solid fa-palette"></i> 2. Select Picture Style / Type
+            </label>
+            <div class="style-cards-grid" id="styleGrid">
+              <button type="button" class="style-card active" data-style="none">
+                <i class="fa-solid fa-ban"></i>
+                <span class="style-name">Default / Raw</span>
+              </button>
+              <button type="button" class="style-card" data-style="photorealistic">
+                <i class="fa-solid fa-camera"></i>
+                <span class="style-name">Photorealistic</span>
+              </button>
+              <button type="button" class="style-card" data-style="anime">
+                <i class="fa-solid fa-dragon"></i>
+                <span class="style-name">Anime & Manga</span>
+              </button>
+              <button type="button" class="style-card" data-style="3d-render">
+                <i class="fa-solid fa-cube"></i>
+                <span class="style-name">3D Pixar Style</span>
+              </button>
+              <button type="button" class="style-card" data-style="cyberpunk">
+                <i class="fa-solid fa-microchip"></i>
+                <span class="style-name">Cyberpunk</span>
+              </button>
+              <button type="button" class="style-card" data-style="oil-painting">
+                <i class="fa-solid fa-paintbrush"></i>
+                <span class="style-name">Oil Painting</span>
+              </button>
+              <button type="button" class="style-card" data-style="concept-art">
+                <i class="fa-solid fa-mountain-sun"></i>
+                <span class="style-name">Concept Art</span>
+              </button>
+              <button type="button" class="style-card" data-style="watercolor">
+                <i class="fa-solid fa-water"></i>
+                <span class="style-name">Watercolor</span>
+              </button>
+              <button type="button" class="style-card" data-style="fantasy">
+                <i class="fa-solid fa-hat-wizard"></i>
+                <span class="style-name">Fantasy Epic</span>
+              </button>
+              <button type="button" class="style-card" data-style="pixel-art">
+                <i class="fa-solid fa-gamepad"></i>
+                <span class="style-name">Pixel Art</span>
+              </button>
+              <button type="button" class="style-card" data-style="cinematic">
+                <i class="fa-solid fa-film"></i>
+                <span class="style-name">Cinematic</span>
+              </button>
+              <button type="button" class="style-card" data-style="vintage">
+                <i class="fa-solid fa-compact-disc"></i>
+                <span class="style-name">Vintage Retro</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Row: Picture Size & Number of Pictures -->
+          <div class="form-row-2col">
+            <!-- 3. Picture Size / Aspect Ratio -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fa-solid fa-vector-square"></i> 3. Picture Size
+              </label>
+              <div class="ratio-cards-grid" id="ratioGrid">
+                <button type="button" class="ratio-card active" data-ratio="1:1" data-width="1024" data-height="1024">
+                  <span class="ratio-icon r-1-1"></span>
+                  <span class="ratio-text">1:1 Square</span>
+                </button>
+                <button type="button" class="ratio-card" data-ratio="16:9" data-width="1280" data-height="720">
+                  <span class="ratio-icon r-16-9"></span>
+                  <span class="ratio-text">16:9 Landscape</span>
+                </button>
+                <button type="button" class="ratio-card" data-ratio="9:16" data-width="720" data-height="1280">
+                  <span class="ratio-icon r-9-16"></span>
+                  <span class="ratio-text">9:16 Portrait</span>
+                </button>
+                <button type="button" class="ratio-card" data-ratio="4:3" data-width="1024" data-height="768">
+                  <span class="ratio-icon r-4-3"></span>
+                  <span class="ratio-text">4:3 Standard</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 4. Number of Pictures -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fa-solid fa-layer-group"></i> 4. Number of Pictures
+              </label>
+              <div class="count-buttons-grid" id="countSelector">
+                <button type="button" class="count-btn active" data-count="1">
+                  <strong>1</strong>
+                  <span>Picture</span>
+                </button>
+                <button type="button" class="count-btn" data-count="2">
+                  <strong>2</strong>
+                  <span>Pictures</span>
+                </button>
+                <button type="button" class="count-btn" data-count="3">
+                  <strong>3</strong>
+                  <span>Pictures</span>
+                </button>
+                <button type="button" class="count-btn" data-count="4">
+                  <strong>4</strong>
+                  <span>Pictures</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Lighting & Atmosphere Tags -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fa-solid fa-wand-sparkles"></i> 5. Mood & Lighting (Optional)
+            </label>
+            <div class="tags-cloud" id="enhancerTags">
+              <button type="button" class="tag-btn" data-tag="Dramatic Lighting">💡 Dramatic Lighting</button>
+              <button type="button" class="tag-btn" data-tag="Golden Hour">🌅 Golden Hour</button>
+              <button type="button" class="tag-btn" data-tag="Volumetric Fog">🌫️ Volumetric Fog</button>
+              <button type="button" class="tag-btn" data-tag="8K Octane Render">✨ 8K Unreal 5</button>
+              <button type="button" class="tag-btn" data-tag="Studio Lighting">📸 Studio Light</button>
+              <button type="button" class="tag-btn" data-tag="Neon Glow">💜 Neon Glow</button>
+            </div>
+          </div>
+
+          <!-- Generate Action Button -->
+          <button type="button" id="generateBtn" class="btn btn-primary btn-block btn-generate">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Generate Images</span>
+          </button>
+        </div>
+
+        <!-- Output Results Panel -->
+        <div class="generator-card output-card">
+          <div class="output-header">
+            <div class="output-title-group">
+              <h3 class="output-title"><i class="fa-solid fa-image"></i> Generated Output</h3>
+              <span id="statusBadge" class="status-tag status-ready">Ready</span>
+            </div>
+            <div id="batchActions" class="batch-actions" style="display: none;">
+              <button id="downloadAllBtn" class="btn btn-sm btn-outline">
+                <i class="fa-solid fa-download"></i> Download All
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Display Container -->
+          <div class="images-display-area" id="imagesContainer">
+            <div class="empty-placeholder" id="emptyState">
+              <div class="placeholder-icon">
+                <i class="fa-solid fa-sparkles"></i>
+              </div>
+              <h4>No images generated yet</h4>
+              <p>Type a prompt on the left or click "Surprise Me", customize your settings, and click Generate.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase / Sample Gallery Section -->
+  <section class="showcase-section" id="showcase">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">Created with DreamCanvas</h2>
+        <p class="section-desc">Explore inspirational prompts and click any card to try it in the generator.</p>
+      </div>
+
+      <div class="showcase-grid">
+        <div class="showcase-card" data-prompt="A futuristic neon cyberpunk samurai warrior standing in rainy neo-tokyo street, hyper-realistic, 8k octane render">
+          <div class="showcase-thumb-box">
+            <img src="https://image.pollinations.ai/prompt/A%20futuristic%20neon%20cyberpunk%20samurai%20warrior%20standing%20in%20rainy%20neo-tokyo%20street,%20hyper-realistic,%208k%20octane%20render?width=600&height=600&nologo=true&nofeed=true&negative=watermark,text,logo&seed=101" alt="Cyberpunk Samurai" loading="lazy" />
+          </div>
+          <div class="showcase-info">
+            <span class="showcase-tag">Cyberpunk</span>
+            <p class="showcase-prompt">A futuristic neon cyberpunk samurai warrior standing in rainy neo-tokyo street...</p>
+            <button class="use-prompt-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Use Prompt</button>
+          </div>
+        </div>
+
+        <div class="showcase-card" data-prompt="Cute fluffy baby dragon drinking boba tea in a magical cherry blossom garden, 3d pixar animation style, soft lighting">
+          <div class="showcase-thumb-box">
+            <img src="https://image.pollinations.ai/prompt/Cute%20fluffy%20baby%20dragon%20drinking%20boba%20tea%20in%20a%20magical%20cherry%20blossom%20garden,%203d%20pixar%20animation%20style,%20soft%20lighting?width=600&height=600&nologo=true&nofeed=true&negative=watermark,text,logo&seed=202" alt="Baby Dragon" loading="lazy" />
+          </div>
+          <div class="showcase-info">
+            <span class="showcase-tag">3D Pixar</span>
+            <p class="showcase-prompt">Cute fluffy baby dragon drinking boba tea in a magical cherry blossom garden...</p>
+            <button class="use-prompt-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Use Prompt</button>
+          </div>
+        </div>
+
+        <div class="showcase-card" data-prompt="An ancient mythical city built inside a colossal crystal cave with waterfalls and glowing bioluminescence, photorealistic 8k">
+          <div class="showcase-thumb-box">
+            <img src="https://image.pollinations.ai/prompt/An%20ancient%20mythical%20city%20built%20inside%20a%20colossal%20crystal%20cave%20with%20waterfalls%20and%20glowing%20bioluminescence,%20photorealistic%208k?width=600&height=600&nologo=true&nofeed=true&negative=watermark,text,logo&seed=303" alt="Crystal City" loading="lazy" />
+          </div>
+          <div class="showcase-info">
+            <span class="showcase-tag">Photorealistic</span>
+            <p class="showcase-prompt">An ancient mythical city built inside a colossal crystal cave with waterfalls...</p>
+            <button class="use-prompt-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> Use Prompt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works-section" id="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-desc">Generate professional AI pictures in 3 simple steps.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon"><i class="fa-solid fa-pen-nib"></i></div>
+          <h3 class="step-title">Describe Your Idea</h3>
+          <p class="step-text">Type any concept or imagination into the prompt box, or click "Surprise Me" for creative ideas.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon"><i class="fa-solid fa-sliders"></i></div>
+          <h3 class="step-title">Select Style & Size</h3>
+          <p class="step-text">Choose from 12+ artistic styles, pick your aspect ratio (Square, Landscape, Portrait), and choose the quantity (1 to 4).</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+          <h3 class="step-title">Generate & Download</h3>
+          <p class="step-text">Click Generate to render your images instantly and download high-resolution pictures to your device with one click.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features Section -->
+  <section class="features-section" id="features">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">Why Choose DreamCanvas</h2>
+        <p class="section-desc">Fast, powerful, and accessible for everyone.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-gift"></i></div>
+          <h3 class="feature-title">100% Free Forever</h3>
+          <p class="feature-text">No hidden fees, no credit card required, and no limits on your creative imagination.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+          <h3 class="feature-title">Fast AI Generation</h3>
+          <p class="feature-text">Powered by state-of-the-art diffusion neural networks for rapid rendering in seconds.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-images"></i></div>
+          <h3 class="feature-title">Multi-Image Batching</h3>
+          <p class="feature-text">Generate 1 to 4 variations simultaneously with randomized seeds to find the perfect artwork.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-crop-simple"></i></div>
+          <h3 class="feature-title">Multiple Aspect Ratios</h3>
+          <p class="feature-text">Export in 1:1 Square, 16:9 Landscape, 9:16 Mobile Stories, and 4:3 Standard resolutions.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-palette"></i></div>
+          <h3 class="feature-title">12+ Art Styles</h3>
+          <p class="feature-text">Seamlessly switch between Photorealistic, Anime, 3D Pixar, Oil Painting, Watercolor, and more.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fa-solid fa-lock-open"></i></div>
+          <h3 class="feature-title">No Sign-Up or Token Needed</h3>
+          <p class="feature-text">Start creating immediately without creating an account or managing complex API keys.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section" id="faq">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-desc">Everything you need to know about DreamCanvas AI.</p>
+      </div>
+
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Is DreamCanvas really free to use?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Yes, DreamCanvas AI is 100% free with no subscriptions, credits, or hidden costs. You can generate as many images as you like.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Do I need to sign up or provide an API key?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>No! No sign-up, email, login, or API token is required. Simply open the website and start creating right away.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Can I download the generated images in high quality?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! Every generated picture comes with a direct 1-click Download button to save high-resolution pictures to your computer or phone.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How do I get the best results from my prompt?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Be descriptive about the subject, setting, lighting, and mood (e.g. "sunset lighting, highly detailed, 8k"). You can also click the "Surprise Me" button to see great example prompts!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- History Drawer Modal -->
+  <div class="drawer-overlay" id="historyOverlay">
+    <div class="drawer">
+      <div class="drawer-header">
+        <h3><i class="fa-solid fa-clock-rotate-left"></i> Generation History</h3>
+        <div class="drawer-header-actions">
+          <button id="clearHistoryBtn" class="btn btn-sm btn-danger" title="Clear all history">
+            <i class="fa-solid fa-trash-can"></i> Clear All
+          </button>
+          <button id="closeHistoryBtn" class="icon-close-btn" title="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="drawer-content" id="historyList">
+        <!-- History items inserted dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal for Zoom / Full View -->
+  <div class="lightbox-modal" id="lightboxModal">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-dialog">
+      <button class="lightbox-close" id="lightboxCloseBtn">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="lightbox-img-frame">
+        <img id="lightboxImg" src="" alt="Full preview" />
+      </div>
+      <div class="lightbox-body">
+        <p id="lightboxPrompt" class="lightbox-prompt"></p>
+        <div class="lightbox-meta" id="lightboxMeta"></div>
+        <div class="lightbox-actions">
+          <button id="lightboxDownloadBtn" class="btn btn-primary">
+            <i class="fa-solid fa-download"></i> Download High-Res
+          </button>
+          <button id="lightboxCopyPromptBtn" class="btn btn-outline">
+            <i class="fa-solid fa-copy"></i> Copy Prompt
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <span class="brand-name">Dream<span>Canvas</span></span>
+        <p class="footer-tagline">Free text-to-image generator powered by modern AI diffusion models.</p>
+      </div>
+
+      <div class="footer-links-group">
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <a href="#generator">AI Generator</a>
+          <a href="#showcase">Showcase</a>
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+        </div>
+        <div class="footer-col">
+          <h4>Picture Styles</h4>
+          <a href="#generator">Photorealistic</a>
+          <a href="#generator">Anime & Manga</a>
+          <a href="#generator">3D Pixar Style</a>
+          <a href="#generator">Cyberpunk Art</a>
+        </div>
+        <div class="footer-col">
+          <h4>Help</h4>
+          <a href="#faq">FAQ</a>
+          <a href="#generator">Sample Prompts</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 DreamCanvas AI. Free & Open Text to Image Generator. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

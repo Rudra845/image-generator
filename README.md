@@ -54,6 +54,6 @@ A web application built with **HTML5, CSS3, and JavaScript** that creates AI-gen
 
 ## 🚀 How to Run
 
-1. Open `c:\Users\rudra\Downloads\text to image Generator`.
+1. Open file location.
 2. Double-click [`index.html`] to open in any web browser (Chrome, Edge, Firefox, Brave, Safari).
 3. Type your prompt (or click **Surprise Me**), pick your style, size, and quantity, then click **Generate Images**!
